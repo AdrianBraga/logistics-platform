@@ -1,14 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/database/prisma.service';
 import { CreateDeliveryDto } from './dto/create-delivery.dto';
+import { CreateDeliveryUseCase } from './use-cases/create-delivery.usecase';
 
 @Injectable()
 export class DeliveriesService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private createDeliveryUseCase: CreateDeliveryUseCase) {}
 
-  create(deliveryData: CreateDeliveryDto) {
-    return this.prisma.delivery.create({
-      data: deliveryData,
-    });
+  async create(deliveryData: CreateDeliveryDto) {
+    return await this.createDeliveryUseCase.execute(deliveryData);
   }
 }
