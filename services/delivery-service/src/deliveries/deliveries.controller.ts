@@ -8,6 +8,6 @@ export class DeliveriesController {
 
   @Post()
   async createDelivery(@Body() createDeliveryDto: CreateDeliveryDto) {
-    return await this.deliveriesService.create(createDeliveryDto);
+    return this.deliveriesService.create(createDeliveryDto);
   }
 }

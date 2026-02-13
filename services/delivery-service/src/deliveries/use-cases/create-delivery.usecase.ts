@@ -1,10 +1,10 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/database/prisma.service';
 import { CreateDeliveryDto } from '../dto/create-delivery.dto';
+import { PrismaService } from '../../database/prisma.service';
 
 @Injectable()
 export class CreateDeliveryUseCase {
-  constructor(private prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   async execute(deliveryData: CreateDeliveryDto) {
     const existingDelivery = await this.prisma.delivery.findFirst({
