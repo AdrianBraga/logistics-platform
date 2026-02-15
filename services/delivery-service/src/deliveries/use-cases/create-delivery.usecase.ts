@@ -1,6 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateDeliveryDto } from '../dto/create-delivery.dto';
-import { PrismaService } from '../../database/prisma.service';
 import { DeliveryRepository } from '../repositories/delivery.repository';
 import { Delivery } from '../entities/delivery.entity';
 

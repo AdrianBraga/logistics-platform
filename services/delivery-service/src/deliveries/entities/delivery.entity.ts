@@ -13,13 +13,15 @@ export class Delivery {
   constructor(
     props: Omit<Delivery, 'id' | 'createdAt' | 'updatedAt'>,
     id?: string,
+    createdAt?: Date,
+    updatedAt?: Date,
   ) {
     this.id = id ?? randomUUID();
     this.orderId = props.orderId;
     this.customer = props.customer;
     this.address = props.address;
-    this.status = props.status ?? DeliveryStatus.PENDING;
-    this.createdAt = new Date();
-    this.updatedAt = new Date();
+    this.status = props.status ?? DeliveryStatus.CREATED;
+    this.createdAt = createdAt ?? new Date();
+    this.updatedAt = updatedAt ?? new Date();
   }
 }

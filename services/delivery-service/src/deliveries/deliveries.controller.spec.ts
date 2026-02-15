@@ -33,7 +33,7 @@ describe('DeliveriesController', () => {
       orderId: 'uuid-123',
       customer: 'John Doe',
       address: '123 Main St',
-      status: DeliveryStatus.PENDING,
+      status: DeliveryStatus.CREATED,
     };
 
     const mockResult = {
