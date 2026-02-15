@@ -1,20 +1,29 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateDeliveryDto } from '../dto/create-delivery.dto';
 import { PrismaService } from '../../database/prisma.service';
+import { DeliveryRepository } from '../repositories/delivery.repository';
+import { Delivery } from '../entities/delivery.entity';
 
 @Injectable()
 export class CreateDeliveryUseCase {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly deliveryRepository: DeliveryRepository) {}
 
   async execute(deliveryData: CreateDeliveryDto) {
-    const existingDelivery = await this.prisma.delivery.findFirst({
-      where: { orderId: deliveryData.orderId },
-    });
+    const existingDelivery = await this.deliveryRepository.findByOrderId(
+      deliveryData.orderId,
+    );
 
     if (existingDelivery) {
       throw new BadRequestException('Delivery for this order already exists');
     }
 
-    return this.prisma.delivery.create({ data: deliveryData });
+    const delivery = new Delivery({
+      orderId: deliveryData.orderId,
+      customer: deliveryData.customer,
+      address: deliveryData.address,
+      status: deliveryData.status,
+    });
+
+    return this.deliveryRepository.create(delivery);
   }
 }

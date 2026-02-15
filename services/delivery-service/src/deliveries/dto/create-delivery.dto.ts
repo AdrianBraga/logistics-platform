@@ -5,22 +5,22 @@ import {
   IsString,
   IsUUID,
 } from 'class-validator';
-import { DeliveryStatus } from 'src/types/delivery-status.type';
+import { DeliveryStatus } from 'src/enums/delivery-status.enum';
 
 export class CreateDeliveryDto {
   @IsNotEmpty()
   @IsUUID()
-  orderId: string;
+  readonly orderId: string;
 
   @IsNotEmpty()
   @IsString()
-  customer: string;
+  readonly customer: string;
 
   @IsNotEmpty()
   @IsString()
-  address: string;
+  readonly address: string;
 
   @IsEnum(DeliveryStatus)
   @IsOptional()
-  status: DeliveryStatus;
+  readonly status: DeliveryStatus;
 }

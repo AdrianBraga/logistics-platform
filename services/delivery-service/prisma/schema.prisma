@@ -13,14 +13,22 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum DeliveryStatus {
+  CREATED
+  IN_TRANSIT
+  DELIVERED
+  CANCELLED
+}
+
 model Delivery {
-  id        String   @id @default(uuid())
-  orderId   String
+  id        String         @id @default(uuid())
+  orderId   String         @unique
   customer  String
   address   String
-  status    String   @default("CREATED")
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  status    DeliveryStatus @default(CREATED)
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
 
-  @@map("delivery")
+  @@map("deliveries")
+  @@index([customer])
 }

@@ -1,54 +1,54 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { DeliveriesController } from './deliveries.controller';
-import { DeliveriesService } from './deliveries.service';
-import { DeliveryStatus } from 'src/types/delivery-status.type';
+import { DeliveryStatus } from 'src/enums/delivery-status.enum';
 import { Delivery } from './entities/delivery.entity';
+import { CreateDeliveryUseCase } from './use-cases/create-delivery.usecase';
 
 describe('DeliveriesController', () => {
-  let controller: DeliveriesController;
-  let service: DeliveriesService;
+  let deliveriesController: DeliveriesController;
+  let deliveriesUseCase: CreateDeliveryUseCase;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [DeliveriesController],
       providers: [
         {
-          provide: DeliveriesService,
+          provide: CreateDeliveryUseCase,
           useValue: {
-            create: jest.fn(),
+            execute: jest.fn(),
           },
         },
       ],
     }).compile();
 
-    controller = module.get<DeliveriesController>(DeliveriesController);
-    service = module.get<DeliveriesService>(DeliveriesService);
+    deliveriesController =
+      module.get<DeliveriesController>(DeliveriesController);
+    deliveriesUseCase = module.get<CreateDeliveryUseCase>(
+      CreateDeliveryUseCase,
+    );
   });
 
-  it('should be defined', () => {
-    expect(controller).toBeDefined();
-  });
-
-  it('should call DeliveriesService.create and return a delivery', async () => {
+  it('should call CreateDeliveryUseCase with correct data', async () => {
     const createDeliveryDto = {
-      orderId: '114a83e0-f179-4a46-88e9-3b97c905bfb7',
+      orderId: 'uuid-123',
       customer: 'John Doe',
-      address: 'Rua A',
+      address: '123 Main St',
       status: DeliveryStatus.PENDING,
     };
 
-    const mockDelivery: Delivery = {
-      id: '3a9f25c3-a55d-4bde-9c19-dd2e40874d5a',
+    const mockResult = {
+      id: 'any-id',
       ...createDeliveryDto,
       createdAt: new Date(),
-      updatedAt: new Date(),
     };
 
-    jest.spyOn(service, 'create').mockResolvedValue(mockDelivery);
+    jest
+      .spyOn(deliveriesUseCase, 'execute')
+      .mockResolvedValue(mockResult as Delivery);
 
-    const result = await controller.createDelivery(createDeliveryDto);
+    const result = await deliveriesController.createDelivery(createDeliveryDto);
 
-    expect(service.create).toHaveBeenCalledWith(createDeliveryDto);
-    expect(result).toEqual(mockDelivery);
+    expect(deliveriesUseCase.execute).toHaveBeenCalledWith(createDeliveryDto);
+    expect(result).toEqual(mockResult);
   });
 });
