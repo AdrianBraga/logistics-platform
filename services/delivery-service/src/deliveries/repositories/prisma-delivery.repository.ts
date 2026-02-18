@@ -29,4 +29,18 @@ export class PrismaDeliveryRepository implements DeliveryRepository {
 
     return delivery as Delivery | null;
   }
+
+  async update(delivery: Delivery): Promise<Delivery> {
+    const updatedDelivery = await this.prismaService.delivery.update({
+      where: {
+        orderId: delivery.orderId,
+      },
+      data: {
+        status: delivery.status,
+        updatedAt: delivery.updatedAt,
+      },
+    });
+
+    return updatedDelivery as Delivery;
+  }
 }

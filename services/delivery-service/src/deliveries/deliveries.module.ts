@@ -5,18 +5,24 @@ import { CreateDeliveryUseCase } from './use-cases/create-delivery.use-case';
 import { DeliveryRepository } from './repositories/delivery.repository';
 import { PrismaDeliveryRepository } from './repositories/prisma-delivery.repository';
 import { GetDeliveryUseCase } from './use-cases/get-delivery.use-case';
+import { UpdateDeliveryStatusUseCase } from './use-cases/update-delivery-status.use-case';
 
 @Module({
   imports: [DatabaseModule],
   providers: [
     CreateDeliveryUseCase,
     GetDeliveryUseCase,
+    UpdateDeliveryStatusUseCase,
     {
       provide: DeliveryRepository,
       useClass: PrismaDeliveryRepository,
     },
   ],
   controllers: [DeliveriesController],
-  exports: [CreateDeliveryUseCase, GetDeliveryUseCase],
+  exports: [
+    CreateDeliveryUseCase,
+    GetDeliveryUseCase,
+    UpdateDeliveryStatusUseCase,
+  ],
 })
 export class DeliveriesModule {}
