@@ -7,7 +7,7 @@ import { Delivery } from '../entities/delivery.entity';
 export class CreateDeliveryUseCase {
   constructor(private readonly deliveryRepository: DeliveryRepository) {}
 
-  async execute(deliveryData: CreateDeliveryDto) {
+  async execute(deliveryData: CreateDeliveryDto): Promise<Delivery> {
     const existingDelivery = await this.deliveryRepository.findByOrderId(
       deliveryData.orderId,
     );
