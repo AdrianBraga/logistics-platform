@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { DeliveryRepository } from '../repositories/delivery.repository';
-import { CreateDeliveryUseCase } from './create-delivery.usecase';
+import { CreateDeliveryUseCase } from './create-delivery.use-case';
 import { DeliveryStatus } from 'src/enums/delivery-status.enum';
 import { BadRequestException } from '@nestjs/common';
 import { Delivery } from '../entities/delivery.entity';
@@ -15,6 +15,8 @@ describe('CreateDeliveryUseCase', () => {
   };
 
   beforeEach(async () => {
+    jest.clearAllMocks();
+
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         CreateDeliveryUseCase,
@@ -53,14 +55,21 @@ describe('CreateDeliveryUseCase', () => {
     expect(result).toBeDefined();
     expect(result.orderId).toBe(createDeliveryDto.orderId);
     expect(result.customer).toBe(createDeliveryDto.customer);
-    expect(deliveryRepository.create).toHaveBeenCalledWith(createDeliveryDto);
+    expect(deliveryRepository.create).toHaveBeenCalledWith(
+      await expect.objectContaining({
+        orderId: createDeliveryDto.orderId,
+        customer: createDeliveryDto.customer,
+        address: createDeliveryDto.address,
+        status: DeliveryStatus.CREATED,
+      }),
+    );
   });
 
   it('should throw BadRequestException if delivery already exists', async () => {
     const createDeliveryDto = {
-      orderId: 'existing-order',
+      orderId: 'uuid-123',
       customer: 'John Doe',
-      address: 'Rua A',
+      address: '123 Main St',
     };
 
     mockDeliveryRepository.findByOrderId.mockResolvedValue(
