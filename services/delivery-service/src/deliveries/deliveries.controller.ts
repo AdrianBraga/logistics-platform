@@ -13,6 +13,7 @@ import { GetDeliveryUseCase } from './use-cases/get-delivery.use-case';
 import { Delivery } from './entities/delivery.entity';
 import { UpdateDeliveryStatusUseCase } from './use-cases/update-delivery-status.use-case';
 import { DeliveryStatus } from 'src/enums/delivery-status.enum';
+import { UpdateDeliveryStatusDto } from './dto/update-delivery-status.dto';
 
 @Controller('deliveries')
 export class DeliveriesController {
@@ -36,10 +37,14 @@ export class DeliveriesController {
   }
 
   @Patch(':orderId/status')
+  @HttpCode(200)
   async updateDeliveryStatus(
     @Param('orderId') orderId: string,
-    @Body('status') newStatus: DeliveryStatus,
+    @Body('status') updateStatusDto: UpdateDeliveryStatusDto,
   ) {
-    return await this.updateDeliveryStatusUseCase.execute(orderId, newStatus);
+    return await this.updateDeliveryStatusUseCase.execute(
+      orderId,
+      updateStatusDto.status,
+    );
   }
 }
